@@ -253,6 +253,8 @@ def show_project(request, project):
 def show_subproject(request, project, subproject):
     obj = get_subproject(request, project, subproject)
 
+    wb_messages = WhiteboardMessage.objects.filter(language=None,project=None,subproject=obj)
+
     last_changes = Change.objects.prefetch().filter(
         translation__subproject=obj
     )[:10]
@@ -273,6 +275,7 @@ def show_subproject(request, project, subproject):
                 {'subproject': obj.slug, 'project': obj.project.slug}
             ),
             'new_lang_form': new_lang_form,
+            'whiteboard_messages': wb_messages,
         }
     )
 
