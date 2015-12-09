@@ -209,7 +209,7 @@ def show_project(request, project):
     obj = get_project(request, project)
 
     # Filter whiteboard messages for project
-    wb_messages = WhiteboardMessage.objects.filter(language=None,project=obj,subproject=None)
+    wb_messages = WhiteboardMessage.objects.filter(Q(project=None)|Q(project=obj),language=None,subproject=None)
     
     dict_langs = Dictionary.objects.filter(
         project=obj
@@ -254,8 +254,11 @@ def show_project(request, project):
 def show_subproject(request, project, subproject):
     obj = get_subproject(request, project, subproject)
 
-    # Filter whiteboard messages for subproject
-    wb_messages = WhiteboardMessage.objects.filter(language=None,project=None,subproject=obj)
+    # Filter whiteboard messages for subproject and project
+    wb_messages = WhiteboardMessage.objects.filter( 
+            (Q(project=None)|Q(project=obj.project)) \
+            & (Q(subproject=None)|Q(subproject=obj)) \
+            ,language=None)
 
     last_changes = Change.objects.prefetch().filter(
         translation__subproject=obj
@@ -291,8 +294,12 @@ def show_translation(request, project, subproject, lang):
     # Check locks
     obj.is_locked(request.user)
 
-    # Filter whiteboard messages for languages
-    wb_messages = WhiteboardMessage.objects.filter(language=None,project=None,subproject=None)
+    # Filter whiteboard messages for languages, subproject and project
+    wb_messages = WhiteboardMessage.objects.filter( 
+            (Q(project=None)|Q(project=obj.subproject.project)) \
+            & (Q(subproject=None)|Q(subproject=obj.subproject)) \
+            & (Q(language=None)|Q(language=obj.language)) \
+            )
     
     # Get form
     form = get_upload_form(request)()
