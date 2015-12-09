@@ -67,7 +67,7 @@ def home(request):
         )
         return redirect('password')
 
-    wb_messages = WhiteboardMessage.objects.all()
+    wb_messages = WhiteboardMessage.objects.filter(language=None,project=None,subproject=None)
 
     projects = Project.objects.all_acl(request.user)
     if projects.count() == 1:
