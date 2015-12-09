@@ -208,6 +208,8 @@ def show_engage(request, project, lang=None):
 def show_project(request, project):
     obj = get_project(request, project)
 
+    wb_messages = WhiteboardMessage.objects.filter(language=None,project=obj,subproject=None)
+    
     dict_langs = Dictionary.objects.filter(
         project=obj
     ).values_list(
@@ -243,6 +245,7 @@ def show_project(request, project):
                 {'project': obj.slug}
             ),
             'add_user_form': UserManageForm(),
+            'whiteboard_messages': wb_messages,
         }
     )
 
