@@ -222,9 +222,14 @@ class ChangeAdmin(admin.ModelAdmin):
 
 
 class WhiteboardAdmin(admin.ModelAdmin):
-    list_display = ['message']
-    prepopulated_fields = {}
+    list_display = ['short_message','project','subproject','language']
     search_fields = ['message']
+    def short_message(self, obj):
+        if len(obj.message) > 100:
+            return obj.message[:100] + "..."
+        else: 
+            return obj.message
+    short_message.short_description = 'Message'
 
 
 class AdvertisementAdmin(admin.ModelAdmin):
