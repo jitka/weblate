@@ -29,9 +29,9 @@ from weblate.lang.models import Language
 
 class WhiteboardMessage(models.Model):
     message = models.TextField(blank=True)
-    project = models.ForeignKey(Project,null=True) 
-    subproject = models.ForeignKey(SubProject,null=True) 
-    language = models.ForeignKey(Language,null=True) 
+    project = models.ForeignKey(Project,blank=True,null=True) 
+    subproject = models.ForeignKey(SubProject,blank=True,null=True) 
+    language = models.ForeignKey(Language,blank=True,null=True) 
 
     class Meta(object):
         app_label = 'trans'
