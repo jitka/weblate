@@ -208,6 +208,7 @@ def show_engage(request, project, lang=None):
 def show_project(request, project):
     obj = get_project(request, project)
 
+    # Filter whiteboard messages for project
     wb_messages = WhiteboardMessage.objects.filter(language=None,project=obj,subproject=None)
     
     dict_langs = Dictionary.objects.filter(
@@ -253,6 +254,7 @@ def show_project(request, project):
 def show_subproject(request, project, subproject):
     obj = get_subproject(request, project, subproject)
 
+    # Filter whiteboard messages for subproject
     wb_messages = WhiteboardMessage.objects.filter(language=None,project=None,subproject=obj)
 
     last_changes = Change.objects.prefetch().filter(
@@ -289,6 +291,9 @@ def show_translation(request, project, subproject, lang):
     # Check locks
     obj.is_locked(request.user)
 
+    # Filter whiteboard messages for languages
+    wb_messages = WhiteboardMessage.objects.filter(language=None,project=None,subproject=None)
+    
     # Get form
     form = get_upload_form(request)()
 
@@ -310,7 +315,7 @@ def show_translation(request, project, subproject, lang):
                 'date': timezone.now().date() - datetime.timedelta(days=31)
             }
         )
-
+    
     return render(
         request,
         'translation.html',
@@ -330,6 +335,7 @@ def show_translation(request, project, subproject, lang):
             ).exclude(
                 pk=obj.pk
             ),
+            'whiteboard_messages': wb_messages,
         }
     )
 

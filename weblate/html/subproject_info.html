@@ -45,10 +45,3 @@
 {% endwith %}
 {% endif %}
 
-{% if whiteboard_enabled %}
-{% for msg in whiteboard_messages %}
-<tr>
-	<td colspan="3"> {{msg.message}} </td>
-</tr>
-{% endfor %}
-{% endif %}
